@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 const { PORT = 3000 } = process.env;
+
 export default defineConfig({
   plugins: [react()],
   server: {
@@ -18,7 +19,8 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: "../dist/app",
+    rollupOptions: {
+      external: ['@mui/material/styles'], // Externalize the problematic module
+    },
   },
 });
-
-
