@@ -28,13 +28,13 @@ const userByID = async (req, res, next, id) => {
     try {
         let user = await User.findById(id)
         if (!user)
-            return res.status(400).json({
+            return res.status('400').json({
                 error: "User not found"
             })
         req.profile = user
         next()
     } catch (err) {
-        return res.status(400).json({
+        return res.status('400').json({
             error: "Could not retrieve user"
         })
     }
@@ -65,28 +65,22 @@ const remove = async (req, res) => {
         let deletedUser = await user.deleteOne()
         deletedUser.hashed_password = undefined
         deletedUser.salt = undefined
-         res.json({
-            message: 'User deleted successfully',
-            deletedUser: deletedUser
-        });
+        res.json(deletedUser)
     } catch (err) {
         return res.status(400).json({
             error: errorHandler.getErrorMessage(err)
         })
     }
 }
-const removeAll = async (req, res) => {
-    try {
-        const deletedUsers = await User.deleteMany();  // Delete all users
-        res.json({
-            message: 'All users deleted successfully',
-            deletedUsers: deletedUsers
-        });
-    } catch (err) {
-        return res.status(400).json({
-            error: errorHandler.getErrorMessage(err)
-        });
+const isSeller = (req, res, next) => {
+    const isSeller = req.profile && req.profile.seller
+    if (!isSeller) {
+        return res.status('403').json({
+            error: "User is not a seller"
+        })
     }
-};
+    next()
+}
+export default { create, userByID, read, list, remove, update, isSeller }
 
-export default { create, userByID, read, list, remove, update, removeAll };
+

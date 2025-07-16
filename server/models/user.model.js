@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import crypto from 'crypto'
+//const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -12,6 +13,10 @@ const UserSchema = new mongoose.Schema({
         unique: 'Email already exists',
         match: [/.+\@.+\..+/, 'Please fill a valid email address'],
         required: 'Email is required'
+    },
+    seller: {
+        type: Boolean,
+        default: false
     },
     created: {
         type: Date,
@@ -31,12 +36,13 @@ UserSchema.virtual('password')
     .set(function (password) {
         this._password = password;
         this.salt = this.makeSalt();
-        this.hashed_password = this.encryptPassword(password);
+        this.hashed_password = this.encryptPassword(password)
         //this.hashed_password = password;
+        console.log(this.hashed_password)
     })
     .get(function () {
-        return this._password;
-    });
+        return this._password
+    })
 UserSchema.path('hashed_password').validate(function (v) {
     if (this._password && this._password.length < 6) {
         this.invalidate('password', 'Password must be at least 6 characters.');
@@ -57,6 +63,7 @@ UserSchema.methods = {
                 .update(password)
                 .digest('hex')
         } catch (err) {
+            console.log(err);
             return ''
         }
     },
@@ -64,7 +71,6 @@ UserSchema.methods = {
         return Math.round((new Date().valueOf() * Math.random())) + ''
     }
 }
-
 //module.exports = mongoose.model('User', UserSchema);
 export default mongoose.model('User', UserSchema);
 
