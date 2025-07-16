@@ -31,7 +31,10 @@ app.use((err, req, res, next) => {
         console.log(err);
     }
 });
-
+// SPA fallback: serve index.html for any route not handled above
+app.get("*", (req, res) => {
+    res.sendFile(path.join(CURRENT_WORKING_DIR, "dist/app/index.html"));
+});
 export default app;
 
 
