@@ -17,16 +17,16 @@ mongoose.connection.on('error', () => {
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to My Portfolio application." });
 });
-// app.listen(config.port, (err) => { //for local deployment
-//     if (err) {
-//         console.log(err)
-//     }
-//     console.info('Server started on port %s.', config.port)
-// })
-
-app.listen(process.env.PORT || 3000, (err) => { //for production deployment
+app.listen(config.port, (err) => { //for local deployment
     if (err) {
         console.log(err)
     }
-    console.info('Server started on port %s.', process.env.PORT || 3000)
+    console.info('Server started on port %s.', config.port)
 })
+
+// app.listen(process.env.PORT || 3000, (err) => { //for production deployment
+//     if (err) {
+//         console.log(err)
+//     }
+//     console.info('Server started on port %s.', process.env.PORT || 3000)
+// })
